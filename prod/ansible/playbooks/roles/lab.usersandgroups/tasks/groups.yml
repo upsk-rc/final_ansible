@@ -1,0 +1,5 @@
+---
+- name: Ensure groups are present or absent
+  ansible.builtin.group:
+    name: "{{ group.name }}"
+    state: "{{ group.state }}"

@@ -1,0 +1,14 @@
+<VirtualHost *:80>
+    ServerName {{ wp_host }}
+    ServerAlias www.{{ wp_host }}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/{{ wp_host }}
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        <Directory /var/www/{{ wp_host }}>
+          Options -Indexes
+          AllowOverride All
+    </Directory> 
+    
+</VirtualHost>

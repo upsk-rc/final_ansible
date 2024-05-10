@@ -1,0 +1,6 @@
+---
+- name: Prepare landing zone for Wordpress
+  include_tasks: landing_zone.yml
+
+- name: Wordpress installation and configuration
+  include_tasks: wordpress.yml

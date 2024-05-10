@@ -1,0 +1,19 @@
+---
+- name: Apache2 installation and configuration in the Production environnment
+  hosts: web-servers:&azure-prod
+  become: true
+  roles:
+    - role: apache_role
+
+
+- name: PHP installation and configuration in the Production environnment
+  hosts: web-servers:&azure-prod
+  become: true
+  roles:
+    - role: php_role
+
+- name: Wordpress installation and configuration in the Production environnment
+  hosts: web-servers:&azure-prod
+  roles:
+    - role: wordpress_role
+

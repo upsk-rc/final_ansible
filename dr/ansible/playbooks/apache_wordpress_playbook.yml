@@ -1,0 +1,19 @@
+---
+- name: Apache2 installation and configuration in the Disastrer Recovery environnment
+  hosts: web-servers:&azure-dr
+  become: true
+  roles:
+    - role: apache_role
+
+
+- name: PHP installation and configuration in the Disaster Recovery environnment
+  hosts: web-servers:&azure-dr
+  become: true
+  roles:
+    - role: php_role
+
+- name: Wordpress installation and configuration in the Disaster Recovery environnment
+  hosts: web-servers:&azure-dr
+  roles:
+    - role: wordpress_role
+

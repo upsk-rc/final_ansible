@@ -1,0 +1,32 @@
+---
+- name: Print user details
+  debug:
+    var: user
+# Create users
+- name: Ensure users are present or absent
+  ansible.builtin.user:
+    name: "{{ user.name }}"
+    state: "{{ user.state }}"
+    password: "{{ user.password }}"
+    groups: "{{ user.groups }}"
+    shell: "{{ user.shell }}"
+    createhome: "{{ user.createhome }}"
+    generate_ssh_key: "{{ user.generate_ssh_key }}"
+    ssh_key_bits: 2048
+    ssh_key_file: ".ssh/id_rsa"
+
+- name: Ensure home subfolders exist
+  ansible.builtin.file:
+    path: "/home/{{ user.name }}/{{ item }}"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: '0755'
+  loop: "{{ user.default_folders}}"
+
+- name: Fetch private SSH key to control node
+  ansible.builtin.fetch:
+    src: "/home/{{ user.name }}/.ssh/id_rsa"
+    dest: "{{ destination_path_on_control_node }}/{{ inventory_hostname }}_{{ user.name }}_id_rsa"
+    flat: yes
+  notify: reload sshd

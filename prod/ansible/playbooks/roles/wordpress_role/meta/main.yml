@@ -1,0 +1,17 @@
+galaxy_info:
+  role_name: wordpress_role
+  description: basic installation and configuration of Wordpress
+  min_ansible_version: "2.9"
+  license: MIT
+  
+  platforms:
+   - name: Ubuntu
+     versions:
+       - "Jammy Jellyfish"
+   
+  galaxy_tags: 
+    - wordpress
+
+dependencies: 
+  - apache_role
+  - php_role

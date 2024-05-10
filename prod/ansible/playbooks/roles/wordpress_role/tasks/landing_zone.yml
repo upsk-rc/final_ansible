@@ -1,0 +1,28 @@
+---
+- name: Enable Apache2 rewrite module
+  become: true
+  community.general.apache2_module: 
+    name: rewrite 
+    state: present
+
+- name: Prepare Wordpress virtualhost 
+  become: true
+  ansible.builtin.template:
+    src: roles/wordpress_role/templates/virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/{{ wp_host }}.conf
+  notify: Restart Apache2
+  
+- name: Disable Apache2 default site 
+  become: true
+  ansible.builtin.file:
+    name: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify: Restart Apache2
+  
+- name: Enable Wordpress site 
+  become: true
+  ansible.builtin.file:
+    src: /etc/apache2/sites-available/{{ wp_host }}.conf
+    dest: /etc/apache2/sites-enabled/{{ wp_host }}.conf
+    state: link
+  notify: Restart Apache2

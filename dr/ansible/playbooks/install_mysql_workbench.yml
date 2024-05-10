@@ -1,0 +1,16 @@
+---
+- name: Install MySQL Workbench on Windows Server
+  hosts: windows-os:&azure-dr
+  tasks:
+    - name: Download MySQL Workbench installer
+      win_get_url:
+        url: https://cdn.mysql.com/Downloads/MySQLGUITools/mysql-workbench-community-8.0.36-winx64.msi
+        dest: C:\temp\mysql-workbench.msi
+
+    - name: Install MySQL Workbench
+      ansible.windows.win_package:
+        path: C:\temp\mysql-workbench.msi
+        arguments: /quiet
+        product_id: '*'
+        state: present
+

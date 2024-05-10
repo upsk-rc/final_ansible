@@ -1,0 +1,34 @@
+---
+- name: Patching and Updating Linux systems
+  hosts: linux-os:&azure-dr
+  tasks:
+    - name: Update Debian-based systems databases
+      become: yes
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: "yes"
+
+- name: Patching and Updating Windows systems
+  hosts: windows-os:&azure-dr
+  tasks:
+    - name: Update Windows systems databases
+      ansible.windows.win_updates:
+        category_names: "*"
+        state: searched
+      register: win_updates_results
+
+    - name: Reboot Windows if necessary
+      ansible.windows.win_reboot:
+      when:
+        - win_updates_results.reboot_required == true
+
+
+    - name: Install security updates
+      ansible.windows.win_updates:
+        category_names: "*"
+        state: installed
+      register: win_upgrades_results
+      when:
+        - win_updates_results.updates | length > 0
+
+

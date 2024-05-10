@@ -1,0 +1,76 @@
+azure-dr:
+  hosts:
+    grupo4-neu-dr-vm-web:
+      ansible_host: 10.0.1.4
+
+    grupo4-neu-dr-vm-db:
+      ansible_host: 10.0.2.4
+
+    windows-server-dr:
+      ansible_host: 10.0.3.4
+
+azure-prod:
+  hosts:
+    grupo4-weu-prod-vm-web:
+      ansible_host: 10.1.5.4
+
+    grupo4-weu-prod-db:
+      ansible_host: 10.1.6.4
+
+    windows-server-prod:
+      ansible_host: 10.1.7.4
+
+linux-os:
+  hosts:
+    grupo4-neu-dr-vm-web:
+
+    grupo4-neu-dr-vm-db:
+
+    grupo4-weu-prod-vm-web:
+
+    grupo4-weu-prod-db:
+
+windows-os:
+  hosts:
+    windows-server-dr:
+
+    windows-server-prod:
+
+north-europe:
+  hosts:
+
+    grupo4-neu-dr-vm-web:
+
+    grupo4-neu-dr-vm-db:
+
+    windows-server-dr:
+
+west-europe:
+  hosts:
+
+    grupo4-weu-prod-vm-web:
+
+    grupo4-weu-prod-db:
+
+    windows-server-prod:
+
+web-servers:
+  hosts:
+
+    grupo4-neu-dr-vm-web:
+
+    grupo4-weu-prod-vm-web:
+
+database-servers:
+  hosts:
+
+    grupo4-neu-dr-vm-db:
+
+    grupo4-weu-prod-db:
+
+windows-servers:
+  hosts:
+
+    windows-server-dr:
+
+    windows-server-prod:

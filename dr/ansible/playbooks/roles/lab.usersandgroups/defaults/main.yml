@@ -1,0 +1,23 @@
+---
+users_list:
+  - name: exampleuser
+    state: present
+    password: "{{ 'examplepassword' | password_hash('sha512') }}"
+    groups: ["examplegroup"]
+    shell: "/bin/bash"
+    createhome: yes
+    generate_ssh_key: true
+    default_folders:
+      - "Documents"
+      - "Downloads"
+      - "Music"
+      - "Pictures"
+      - "Videos"
+
+# Default list of groups to manage
+groups_list:
+  - name: examplegroup
+    state: present
+
+# Path to keep the fetched SSH keys
+destination_path_on_control_node: "/tmp"

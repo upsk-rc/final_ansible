@@ -1,0 +1,66 @@
+---
+- name: Manage users and groups
+  hosts: linux-os:&azure-dr
+  become: true
+  roles:
+    - role: lab.usersandgroups
+  vars:
+    users_list:
+      - name: dbadmin
+        state: present
+        password:  !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30643538343261613163353963663865656562623631356362353163346462363966303864386131
+          3035313639346533363464636565336235636234636562360a646538393436663464333530623462
+          37353835663733336365396137373162303635303338383063346633383862666435303862663963
+          6233666439656163300a393261323433386537343239313131366237343661323230613232386565
+          3438
+        groups: ["groupdba"]
+        createhome: yes
+        generate_ssh_key: true
+        shell: "/bin/bash"
+        default_folders:
+          - "Documents"
+          - "Downloads"
+          - "Music"
+          - "Pictures"
+          - "Videos"
+      - name: developer
+        state: present
+        password:  !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66353530376537353362616336623734363735343731386337353137623533373137326166343066
+          3533626336333934373037373131333332333231323932390a323531363331323237363936336666
+          32646361363364373466653339643739366463643765303164363737343636373830366135376461
+          3237343238373230380a613137383464643965336161353063343234376535643062306630616630
+          3837
+        groups: ["groupdev"]
+        createhome: yes
+        generate_ssh_key: true
+        shell: "/bin/bash"
+        default_folders:
+          - "Documents"
+          - "Downloads"
+          - "Work"
+      - name: dbdev
+        state: present
+        password:  !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66356162316639323939663032393939373564363636373536383261313262393366366532633333
+          6438623931663962313236303031396266376436386362300a373434353232366464346439633033
+          36333561626530653431356566343363323763636339323039623031366638633761303933653564
+          3664303862346137640a366330396435306539366338303961303230313866656463326534313764
+          3237
+        groups: ["groupdba", "groupdev"]
+        createhome: yes
+        generate_ssh_key: true
+        shell: "/bin/bash"
+        default_folders:
+          - "Documents"
+          - "Downloads"
+          - "Tests"
+    groups_list:
+      - name: groupdev
+        state: present
+      - name: groupdba
+        state: present

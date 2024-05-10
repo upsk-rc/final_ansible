@@ -1,0 +1,68 @@
+---
+- name: Prepare Wordpress directory
+  become: true
+  ansible.builtin.file:
+    path: "/var/www/{{ wp_host }}"
+    state: directory
+    
+- name: WordPress download and unpackage
+  become: true
+  ansible.builtin.unarchive:
+    src: https://wordpress.org/latest.tar.gz
+    dest: "/var/www/{{ wp_host }}"
+    remote_src: yes
+    extra_opts:
+    - --strip-components=1
+
+- name: Set up wp-config 
+  become: true
+  ansible.builtin.template:
+    src: "roles/wordpress_role/templates/wp-config.php.j2"
+    dest: "/var/www/{{ wp_host }}/wp-config.php"
+  notify: Restart Apache2  
+  
+- name: Change ownership and permissions for Wordpress directory
+  become: true
+  ansible.builtin.file:
+    path: "/var/www/{{ wp_host }}"
+    state: directory
+    recurse: true
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: Flush pending handlers
+  meta: flush_handlers
+  
+- name: wp-cli download 
+  become: true
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: /usr/local/bin/wp
+
+- name: Change ownership and permissions for the wp-cli command
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/bin/wp
+    owner: ansible
+    group: ansible
+    mode: 0750
+
+- name: Test wp-cli
+  ansible.builtin.shell:
+    cmd: wp --info
+  register: wp_info_result
+
+- name: Show wp-cli test result
+  ansible.builtin.debug:
+    msg: "{{ wp_info_result }}"
+
+- name: Install site via wp-cli
+  ansible.builtin.shell:
+    cmd: wp core install --url=dpr.example.com --title="DPR" --admin_user=wp_user --admin_password=password --admin_email=info@dpr.example.com
+    chdir: "/var/www/{{ wp_host }}"
+  register: wp_install_result
+  
+- name: Show wp-cli install result
+  ansible.builtin.debug:
+    msg: "{{ wp_install_result }}"

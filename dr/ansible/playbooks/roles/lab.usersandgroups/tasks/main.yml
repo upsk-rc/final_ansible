@@ -1,0 +1,14 @@
+---
+# Loop to create groups
+- name: Create groups
+  include_tasks: groups.yml # include the tasks from the groups.yml file
+  loop: "{{ groups_list }}" # loop over the groups_list variable
+  loop_control:
+    loop_var: group # change the loop variable name to group
+
+# Loop to create users and subfolders
+- name: Create user and subfolders
+  include_tasks: users.yml # include the tasks from the users.yml file
+  loop: "{{ users_list }}" # loop over the users_list variable
+  loop_control:
+    loop_var: user # change the loop variable name to user

@@ -1,0 +1,75 @@
+---
+- name: Install and configure MySQL
+  hosts: grupo4-weu-prod-db
+  become: yes
+  vars:
+    mysql_root_password:  !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          61373865653139643033643137613761663563383437396562386134653866306362393336623661
+          3230373133653633613333666435326433383139383335380a363639633738636261663663383437
+          39656430323037663266306466653364323535333866323266343066336461613532306138303032
+          3537613362383264610a363338373136396335643732623739356131336563363063316636356663
+          3966
+
+    db_name: "mysql_weu_prod"
+    db_user: "ansible"
+    db_password:  !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          34333861363231366234313661353333353533393930653664363666626266316233393936653566
+          6361623231396666356136636534333766313233313737330a316166666363323662386565313361
+          33393761353533393762663463336437646233333461393965646463626333316166636337303235
+          3534653762613835360a333333663764616235313238633165376433333238643161613762366665
+          6562
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install MySQL packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - mysql-server
+        - python3-mysqldb
+
+    - name: Secure MySQL installation
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        name: root
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        state: present
+
+    - name: Copy file from control node to server
+      become: true
+      copy:
+        src: /home/ansible/ansible/inventory/mysqld.cnf
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+      notify: restart_service
+
+    - name: Create a MySQL database
+      mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Create a MySQL user
+      mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        host: "%"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+  handlers:
+    - name: restart_service
+      service:
+        name: your_service_name
+        state: restarted
+

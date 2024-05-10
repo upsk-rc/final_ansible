@@ -1,0 +1,33 @@
+galaxy_info:
+  role_name: usersandgroups
+  author: Ansible Training
+  description: Manage users and groups on Linux/Unix systems
+  company: Ansible Training
+  min_ansible_version: "2.9"
+  license: MIT
+
+  # List of platforms you support and the versions, e.g., EL (Enterprise Linux) 7, 8, Ubuntu 18.04 (Bionic)
+  platforms:
+    - name: Rocky
+      versions:
+        - "8.0"
+        - "9.0"
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+        - bullseye
+
+  # List of categories this role falls into, from Galaxy's predefined list
+  galaxy_tags:
+    - system
+    - users
+    - groups
+    - management
+
+  # Dependencies are other roles that this role depends upon to function
+dependencies: []

@@ -1,0 +1,45 @@
+---
+- name: PHP and PHP related packages installation
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - php
+      - php-mysql
+    state: present
+  
+- name: PHP modules installation
+  become: true
+  ansible.builtin.apt:
+    name:
+      - php-curl
+      - php-gd
+      - php-mbstring
+      - php-xml
+      - php-xmlrpc
+      - php-soap
+      - php-intl
+      - php-zip
+    state: present
+
+- name: PHP configuration
+  become: true
+  ansible.builtin.copy:
+    src: "{{ default_file }}"
+    dest: /var/www/html/info.php
+
+- name: Check if link to default site exists
+  ansible.builtin.stat:
+    path: /etc/apache2/sites-enabled/000-default.conf
+  register: link_check
+
+- name: Run smoke test if default site exists
+  ansible.builtin.uri:
+    url: http://localhost/info.php
+    return_content: yes
+  register: smoke_test
+  when: link_check.stat.islnk is defined
+
+- name: Debug smoke test if default site exists
+  ansible.builtin.debug:
+    msg: "{{ smoke_test.content }}"
+  when: smoke_test.content is defined
